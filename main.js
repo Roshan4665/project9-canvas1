@@ -4,7 +4,7 @@ canvas.height = canvas.clientHeight;
 canvas.width = canvas.clientWidth;
 let width = canvas.width;
 let height = canvas.height;
-let x = height / 2, y = width / 2, dx = 2, dy = 2;
+let y = height/4, x = width / 4, dx = 2, dy = 2;
 let radius = height / 30;
 let paddleWidth = width/5, paddleHeight = 20, paddleX = width / 2;
 let leftPressed=false, rightPressed=false;
