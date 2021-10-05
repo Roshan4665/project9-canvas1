@@ -6,19 +6,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bounce Break</title>
     <style>
+        body{
+            background-color: rgb(102, 102, 102);
+        }
         *{
             margin: 0;
             padding: 0;
         }
         canvas{
-            height: 80vh;
+            height: 70vh;
             width: 100vw;
-            background-color: rgb(102, 102, 102);
+            /* background-color: rgb(102, 102, 102); */
+        }
+        .sliderContainer{
+            width: 100%;
+            margin: auto;
+            margin-top: 2vh;
+        }
+        .slider{
+            
+            appearance: none;
+            width: 100%;
+            height: 15px;
+            border-radius: 5px;
+            background-color: #29F021;
+            margin-bottom: 2vh;
+        }
+        #mySlider{
+            display: none;
+        }
+        #speed, #size{
+            margin-top: 1vh;
+            margin-bottom: 2vh;
+            background-color: #F0218A;
+        }
+        .slider::-webkit-slider-thumb{
+            appearance: none;
+            height: 30px;
+            width: 30px;
+            border-radius: 100%;
+            background-color: rgb(195, 230, 227);
+            cursor: pointer;
+        }
+        p{
+            text-align: center;
+            font-size: 1.3rem;
         }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div class="sliderContainer">
+        <input type="range" min="0", max="100", value="50" class="slider" id="mySlider">
+        <p>Control Ball Speed From Below</p>
+        <input type="range" min="0", max="100", value="1" class="slider" id="speed">
+        <p>Control Paddle Size From Below</p>
+        <input type="range" min="0", max="100", value="20" class="slider" id="size">
+    </div>
+
 </body>
 <script src="main.js"></script>
 </html>
