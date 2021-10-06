@@ -80,7 +80,7 @@ function play() {
                             if (x > cb.x && x < cb.x + brickWidth)
                                 dy = (-1.1*dy)%15;
                             else
-                                dx = -1.3*dx;
+                                dx = -1.2*dx;
 
                         }
                     }
@@ -137,8 +137,7 @@ function play() {
         else if (y + radius >= height) {
             lives--;
             x = width / 2, y = 2 * height / 3;
-            if(dx>0) paddleX=3*width/4-20;
-            else paddleX=width/4;
+            paddleX=width/2;
             dy=3, dx=3;
             if (lives <= 0) {
                 ctx.beginPath()
