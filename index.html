@@ -7,7 +7,7 @@
     <title>Bounce Break</title>
     <style>
         body{
-            background-color: rgb(102, 102, 102);
+            background-color: rgb(189, 192, 186);
         }
         *{
             margin: 0;
@@ -50,16 +50,21 @@
         }
         p{
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
+        }
+        ul{
+            height: 2px;
+            background-image: linear-gradient(90deg, rgb(233, 37, 37), rgb(37, 235, 37), rgb(20, 236, 218));
         }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <ul></ul>
     <div class="sliderContainer">
         <input type="range" min="0", max="100", value="50" class="slider" id="mySlider">
         <p>Control Ball Speed From Below</p>
-        <input type="range" min="0", max="100", value="1" class="slider" id="speed">
+        <input type="range" min="0", max="100", value="5" class="slider" id="speed">
         <p>Control Paddle Size From Below</p>
         <input type="range" min="0", max="100", value="20" class="slider" id="size">
     </div>
