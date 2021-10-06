@@ -10,7 +10,7 @@ let width = canvas.width;
 let height = canvas.height;
 
 function play() {
-
+    if(started==true)
     document.getElementById("visible").style.display = "none";
     let score = 0, bricksBroken = 0;
 
@@ -18,21 +18,23 @@ function play() {
     let y = 3 * height / 5, x = width / 2, dy = 2 + (parseInt(speed.value)) * 18 / 100, dx = 2 + parseInt(speed.value) * 20 / 100;
     let lives = 3;
     let paddleWidth = width * parseInt(size.value) / 100, paddleHeight = 20, paddleX = width / 2;
+    if(height>width)
+    paddleWidth*=1.4;
     let leftPressed = false, rightPressed = false;
-    let brickHeight = height / 30, brickWidth = width / 6, brickPaddingSide = width / 12, brickPaddingBottom = height / 20, topOffset = height / 10, leftOffset = width / 6;
+    let brickHeight = height / 30, brickWidth = width / 8, brickPaddingSide = width / 10, brickPaddingBottom = height / 18, topOffset = height / 9, leftOffset = width / 10;
     let bricks = [];
     if (height > width)
         slider.style.display = "inline";
 
     for (let i = 0; i < 4; i++) {
         bricks[i] = [];
-        for (let j = 0; j < 3; j++) {
+        for (let j = 0; j < 5; j++) {
             bricks[i][j] = { x: 0, y: 0, paint: true };
         }
     }
     function drawBricks() {
         for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 3; j++) {
+            for (let j = 0; j < 4; j++) {
                 let xpos = leftOffset + j * (brickWidth + brickPaddingSide);
                 let ypos = topOffset + i * (brickHeight + brickPaddingBottom);
                 bricks[i][j].x = xpos, bricks[i][j].y = ypos;
@@ -52,7 +54,7 @@ function play() {
         gameOver = true;
         bricksBroken = 0;
         for (let i = 0; i < 4; i++) {
-            for (let j = 0; j < 3; j++) {
+            for (let j = 0; j < 4; j++) {
                 let cb = bricks[i][j];
                 if (cb.paint == true) {
                     gameOver = false;
@@ -60,7 +62,7 @@ function play() {
                         if (y + radius > cb.y && y - radius < cb.y + brickHeight) {
                             cb.paint = false;
 
-                            if (x > cb.x && x < cb.x + brickWidth)
+                            if (x >= cb.x && x <= cb.x + brickWidth)
                                 dy = (-1.1 * dy) % 15;
                             else
                                 dx = -1.2 * dx;
@@ -129,8 +131,9 @@ function play() {
         else if (y + radius >= height) {
             lives--;
             x = width / 2, y = 2 * height / 3;
-            paddleX = width / 2;
-            dy = 3, dx = 3;
+            dy=Math.abs(dy);
+            dx=3;
+            paddleX = x;
             if (lives <= 0) {
                 ctx.beginPath()
                 ctx.font = "30px Arial";
