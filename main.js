@@ -8,26 +8,25 @@ canvas.height = canvas.clientHeight;
 canvas.width = canvas.clientWidth;
 let width = canvas.width;
 let height = canvas.height;
-let columns=6;
+let columns = 6;
 function play() {
-    if(started==true)
-    document.getElementById("visible").style.display = "none";
+    if (started == true)
+        document.getElementById("visible").style.display = "none";
     let score = 0, bricksBroken = 0;
 
     let radius = height / 30;
     let y = 3 * height / 5, x = width / 2, dy = 2 + (parseInt(speed.value)) * 18 / 100, dx = 2 + parseInt(speed.value) * 20 / 100;
     let lives = 3;
-    let paddleWidth = width * parseInt(size.value) / 100, paddleHeight = 20, paddleX = width / 2;
-    
+    let paddleWidth = width * parseInt(size.value) / 100, paddleHeight = 20, paddleX = Math.min(width / 2, width - paddleWidth);
+
     let leftPressed = false, rightPressed = false;
     let brickHeight = height / 30, brickWidth = width / 12, brickPaddingSide = width / 15, brickPaddingBottom = height / 18, topOffset = height / 9, leftOffset = width / 10;
     let bricks = [];
-    if(height>width)
-    {
-        columns=3;
-        brickWidth=width*3/13;
-        brickPaddingSide=width/13;
-        leftOffset=width/13;
+    if (height > width) {
+        columns = 3;
+        brickWidth = width * 3 / 13;
+        brickPaddingSide = width / 13;
+        leftOffset = width / 13;
     }
     if (height > width)
         slider.style.display = "inline";
@@ -69,7 +68,7 @@ function play() {
                             cb.paint = false;
 
                             if (x >= cb.x && x <= cb.x + brickWidth)
-                                dy = (-1.1 * dy) % 15;
+                                dy = -1.1 * dy;
                             else
                                 dx = -1.2 * dx;
 
@@ -86,22 +85,30 @@ function play() {
 
 
 
-
+    let ballCol = "#33FFF7";
 
     function drawBall() {
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = "#33FFF7";
+        ctx.fillStyle = ballCol;
         ctx.fill();
         ctx.closePath();
     }
     function drawPaddle() {
         ctx.beginPath();
-        ctx.rect(paddleX, height - paddleHeight, paddleWidth, paddleHeight);
-        ctx.fillStyle = "#F07865";
-        ctx.fill();
+        var grd = ctx.createLinearGradient(paddleX, 0, paddleX + paddleWidth / 2, 0);
+        grd.addColorStop(0, "#eb3434");
+        grd.addColorStop(1, "#1ee3c2");
+        ctx.fillStyle = grd;
+        ctx.fillRect(paddleX, height - paddleHeight, paddleWidth / 2, paddleHeight);
+        var grd = ctx.createLinearGradient(paddleX + paddleWidth / 2, 0, paddleX + paddleWidth, 0);
+        grd.addColorStop(0, "#1ee3c2");
+        grd.addColorStop(1, "#eb3434");
+        ctx.fillStyle = grd;
+        ctx.fillRect(paddleX + paddleWidth / 2 - 1, height - paddleHeight, paddleWidth / 2 + 1, paddleHeight);
         ctx.closePath();
     }
+    let prevX = paddleX;
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         if (started == false) {
@@ -113,10 +120,12 @@ function play() {
             ctx.strokeText("TAP TO START", width / 2, height / 2);
             ctx.closePath();
         }
+        
         drawBall();
         drawBricks();
         paddleWidth = width * parseInt(size.value) / 100;
         if (gameOver) {
+            // ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.beginPath()
             ctx.font = "28px Arial";
             ctx.strokeStyle = "pink";
@@ -134,12 +143,12 @@ function play() {
         if (y + dy - radius <= 0) {
             dy = -dy;
         }
-        else if (y + radius >= height) {
+        else if (y + radius >= height && (x < paddleX || x > paddleX + paddleWidth)) {
             lives--;
             x = width / 2, y = 2 * height / 3;
-            dy=Math.abs(dy);
-            dx=3;
-            paddleX = x;
+            dy = Math.abs(dy);
+            dx = 3;
+            paddleX = Math.min(x, width - paddleWidth);
             if (lives <= 0) {
                 ctx.beginPath()
                 ctx.font = "30px Arial";
@@ -155,14 +164,20 @@ function play() {
 
             }
         }
-        else if (y + radius >= height - paddleHeight && x + radius >= paddleX && x - radius <= paddleX + paddleWidth)
+        else if (y + radius >= height - paddleHeight && x + radius >= paddleX && x - radius <= paddleX + paddleWidth) {
             dy = -dy;
+            ballCol = "#33FFF7";
+            if (x < paddleX + 0.05 * paddleWidth || x > paddleX + 0.95 * paddleWidth) {
+                dx = -1.1 * dx;
+                ballCol = "#eb3434";
+            }
+        }
+        prevX = paddleX;
 
 
         if (x + dx - radius <= 0 || x + dx >= width - radius) {
             dx = -dx;
         }
-
         x += dx;
         y += dy;
         //paddle
@@ -192,6 +207,16 @@ function play() {
         ctx.strokeText("SCORE " + score, width / 2, 32);
 
         ctx.closePath();
+        if(started==true)
+        {
+            ctx.beginPath()
+            ctx.font = "32px Arial";
+            ctx.strokeStyle = "pink";
+            ctx.textBaseline = 'middle';
+            ctx.textAlign = 'center';
+            ctx.strokeText("LIVES "+lives, width / 2, height / 2);
+            ctx.closePath();
+        }
         if (started == true)
             requestAnimationFrame(draw);
 
