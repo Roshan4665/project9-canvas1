@@ -7,7 +7,8 @@
     <title>Bounce Break</title>
     <style>
         body{
-            background-color: rgb(189, 192, 186);
+            background-color: rgb(0, 0, 0);
+            color: pink;
         }
         *{
             margin: 0;
@@ -19,7 +20,8 @@
             /* background-color: rgb(102, 102, 102); */
         }
         .sliderContainer{
-            width: 100%;
+            padding: 2vw;
+            width: 96%;
             margin: auto;
             margin-top: 2vh;
         }
@@ -27,7 +29,7 @@
             
             appearance: none;
             width: 100%;
-            height: 15px;
+            height: 12px;
             border-radius: 5px;
             background-color: #29F021;
             margin-bottom: 2vh;
@@ -38,12 +40,12 @@
         #speed, #size{
             margin-top: 1vh;
             margin-bottom: 2vh;
-            background-color: #F0218A;
+            background-color: #f51283;
         }
         .slider::-webkit-slider-thumb{
             appearance: none;
-            height: 30px;
-            width: 30px;
+            height: 24px;
+            width: 24px;
             border-radius: 100%;
             background-color: rgb(195, 230, 227);
             cursor: pointer;
@@ -63,10 +65,13 @@
     <ul></ul>
     <div class="sliderContainer">
         <input type="range" min="0", max="100", value="50" class="slider" id="mySlider">
-        <p>Control Ball Speed From Below</p>
+        
+        <div id="visible">
+         <p>Control Ball Speed From Below</p>
         <input type="range" min="0", max="100", value="5" class="slider" id="speed">
         <p>Control Paddle Size From Below</p>
         <input type="range" min="0", max="100", value="20" class="slider" id="size">
+    </div>
     </div>
 
 </body>

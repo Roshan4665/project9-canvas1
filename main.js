@@ -1,7 +1,6 @@
 let canvas =/** @type {HTMLCanvasElement} */(document.getElementById("canvas"));
 let ctx = canvas.getContext("2d");
 let started = false;
-let randomize=false;
 let slider = document.getElementById("mySlider");
 let size = document.getElementById("size");
 let speed = document.getElementById("speed");
@@ -9,24 +8,10 @@ canvas.height = canvas.clientHeight;
 canvas.width = canvas.clientWidth;
 let width = canvas.width;
 let height = canvas.height;
-ctx.beginPath()
-ctx.font = "32px Arial";
-ctx.fillStyle = "pink";
-ctx.fill();
-ctx.textBaseline = 'middle';
-ctx.textAlign = 'center';
-
-ctx.strokeText("TAP TO START", width / 2, height / 2);
-ctx.closePath();
-function rand()
-{
-    if(randomize==true)
-    return (Math.random()-0.5)*100;
-    else
-    return 0;
-}
 
 function play() {
+
+    document.getElementById("visible").style.display = "none";
     let score = 0, bricksBroken = 0;
 
     let radius = height / 30;
@@ -39,19 +24,17 @@ function play() {
     if (height > width)
         slider.style.display = "inline";
 
-    for(let i=0;i<4;i++)
-    {
-        bricks[i]=[];
-        for(let j=0;j<3;j++)
-        {
-            bricks[i][j]={x:0, y:0, paint:true};
+    for (let i = 0; i < 4; i++) {
+        bricks[i] = [];
+        for (let j = 0; j < 3; j++) {
+            bricks[i][j] = { x: 0, y: 0, paint: true };
         }
     }
     function drawBricks() {
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 3; j++) {
-                let xpos = leftOffset + j * (brickWidth + brickPaddingSide)+rand();
-                let ypos = topOffset + i * (brickHeight + brickPaddingBottom)+rand();
+                let xpos = leftOffset + j * (brickWidth + brickPaddingSide);
+                let ypos = topOffset + i * (brickHeight + brickPaddingBottom);
                 bricks[i][j].x = xpos, bricks[i][j].y = ypos;
                 if (bricks[i][j].paint == true) {
                     ctx.beginPath();
@@ -78,9 +61,9 @@ function play() {
                             cb.paint = false;
 
                             if (x > cb.x && x < cb.x + brickWidth)
-                                dy = (-1.1*dy)%15;
+                                dy = (-1.1 * dy) % 15;
                             else
-                                dx = -1.2*dx;
+                                dx = -1.2 * dx;
 
                         }
                     }
@@ -113,20 +96,29 @@ function play() {
     }
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (started == false) {
+            ctx.beginPath()
+            ctx.font = "32px Arial";
+            ctx.strokeStyle = "pink";
+            ctx.textBaseline = 'middle';
+            ctx.textAlign = 'center';
+            ctx.strokeText("TAP TO START", width / 2, height / 2);
+            ctx.closePath();
+        }
         drawBall();
         drawBricks();
         paddleWidth = width * parseInt(size.value) / 100;
         if (gameOver) {
             ctx.beginPath()
             ctx.font = "28px Arial";
-            ctx.fillStyle = "pink";
-            ctx.fill();
+            ctx.strokeStyle = "pink";
             ctx.textBaseline = 'middle';
             ctx.textAlign = 'center';
             started = false;
             ctx.strokeText("You Won...❤️ " + score, width / 2, height / 2);
             ctx.strokeText("TAP TO RESTART", width / 2, height / 2 + 40);
             ctx.closePath();
+            document.getElementById("visible").style.display = "inline";
             return;
         }
 
@@ -137,19 +129,19 @@ function play() {
         else if (y + radius >= height) {
             lives--;
             x = width / 2, y = 2 * height / 3;
-            paddleX=width/2;
-            dy=3, dx=3;
+            paddleX = width / 2;
+            dy = 3, dx = 3;
             if (lives <= 0) {
                 ctx.beginPath()
                 ctx.font = "30px Arial";
-                ctx.fillStyle = "pink";
-                ctx.fill();
+                ctx.strokeStyle = "pink";
                 ctx.textBaseline = 'middle';
                 ctx.textAlign = 'center';
                 started = false;
                 ctx.strokeText("Game Over @ " + score, width / 2, height / 2);
                 ctx.strokeText("TAP TO RESTART", width / 2, height / 2 + 40);
                 ctx.closePath();
+                document.getElementById("visible").style.display = "inline";
                 return;
 
             }
@@ -166,13 +158,13 @@ function play() {
         y += dy;
         //paddle
         if (rightPressed) {
-            paddleX += 5+Math.abs(dy*0.5);
+            paddleX += 5 + Math.abs(dy * 0.5);
             // slider.value=100*(paddleX+(paddleWidth/2))/width+paddleWidth/2;
             if (paddleX + paddleWidth > width)
                 paddleX = width - paddleWidth;
         }
         else if (leftPressed) {
-            paddleX -= 5+Math.abs(dy*0.5);
+            paddleX -= 5 + Math.abs(dy * 0.5);
             // slider.value=100*(paddleX+(paddleWidth/2))/width-paddleWidth/2;
             if (paddleX < 0)
                 paddleX = 0;
@@ -185,17 +177,14 @@ function play() {
         collisionDetection();
         ctx.beginPath()
         ctx.font = "28px Arial";
-        ctx.fillStyle = "pink";
-        ctx.fill();
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
-        started = false;
-        // console.log(bricksBroken);
         score = parseInt(bricksBroken * 100 * parseInt(speed.value) / parseInt(size.value));
-        ctx.strokeText("SCORE " + score, width / 2, 34);
+        ctx.strokeText("SCORE " + score, width / 2, 32);
 
         ctx.closePath();
-        requestAnimationFrame(draw);
+        if (started == true)
+            requestAnimationFrame(draw);
 
     }
     document.addEventListener("keydown", keyDownHandler, false);
@@ -210,8 +199,9 @@ function play() {
     }
     draw();
 }
+play();
 canvas.onclick = function () {
-    if (!started) {
+    if (started == false) {
         started = true;
         play();
     }
